@@ -130,28 +130,34 @@ auth.onAuthStateChanged(async (user)=>{
 // BOOK ROOM (FIXED)
 function bookRoom(){
 
-  if(!name.value || !mobile.value || !userEmail.value || !checkin.value || !checkout.value){
+  let n = document.getElementById("name").value.trim();
+  let m = document.getElementById("mobile").value.trim();
+  let e = document.getElementById("userEmail").value.trim();
+  let ci = document.getElementById("checkin").value;
+  let co = document.getElementById("checkout").value;
+
+  if(!n || !m || !e || !ci || !co){
     alert("Please fill all fields!");
     return;
   }
 
   db.collection("hotelBookings").add({
     user: auth.currentUser.email,
-    name: name.value,
-    mobile: mobile.value,
-    email: userEmail.value,
-    checkin: checkin.value,
-    checkout: checkout.value,
+    name: n,
+    mobile: m,
+    email: e,
+    checkin: ci,
+    checkout: co,
     status: "pending"
   })
   .then(()=>{
     alert("Booking Sent Successfully!");
 
-    name.value = "";
-    mobile.value = "";
-    userEmail.value = "";
-    checkin.value = "";
-    checkout.value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("mobile").value = "";
+    document.getElementById("userEmail").value = "";
+    document.getElementById("checkin").value = "";
+    document.getElementById("checkout").value = "";
   })
   .catch(error=>{
     alert(error.message);
