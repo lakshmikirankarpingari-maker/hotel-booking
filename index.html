@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hotel Booking App</title>
+<title>Hotel Booking</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -11,47 +9,56 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 </head>
 
 <body class="bg-gray-900 text-white p-4">
 
-<h1 class="text-2xl mb-4">🏨 Hotel Booking App</h1>
+<h1 class="text-2xl mb-4 text-center">🏨 Sai Lakshmi Bookings</h1>
 
 <!-- LOGIN -->
-<div id="authBox">
+<div id="authBox" class="text-center">
   <input id="email" placeholder="Email" class="p-2 m-1 text-black">
   <input id="password" type="password" placeholder="Password" class="p-2 m-1 text-black">
-  <button onclick="signup()" class="bg-green-600 px-3 py-1">Signup</button>
-  <button onclick="login()" class="bg-blue-600 px-3 py-1">Login</button>
+  <br>
+  <button onclick="signup()" class="bg-green-600 px-3 py-1 m-1">Signup</button>
+  <button onclick="login()" class="bg-blue-600 px-3 py-1 m-1">Login</button>
 </div>
 
 <!-- APP -->
 <div id="app" class="hidden">
 
-  <button onclick="logout()" class="bg-red-600 px-3 py-1 mb-3">Logout</button>
+<button onclick="logout()" class="bg-red-600 px-3 py-1 mb-4">Logout</button>
 
-  <!-- CUSTOMER VIEW -->
-  <div id="userView">
-    <h2 class="text-xl">Book Room</h2>
+<!-- USER BOOKING FORM -->
+<div id="userView">
 
-    <input id="checkin" type="date" class="p-2 m-1 text-black">
-    <input id="checkout" type="date" class="p-2 m-1 text-black">
+<h2 class="text-xl mb-2">Book Room</h2>
 
-    <button onclick="bookRoom()" class="bg-green-600 px-3 py-1">Book</button>
-  </div>
+<input id="name" placeholder="Full Name" class="p-2 m-1 text-black w-full">
+<input id="mobile" placeholder="Mobile Number" class="p-2 m-1 text-black w-full">
+<input id="email2" placeholder="Email" class="p-2 m-1 text-black w-full">
 
-  <!-- OWNER VIEW -->
-  <div id="ownerView" class="hidden">
-    <h2 class="text-xl">Owner Dashboard</h2>
-    <div id="bookings"></div>
-  </div>
+<input id="checkin" type="date" class="p-2 m-1 text-black w-full">
+<input id="checkout" type="date" class="p-2 m-1 text-black w-full">
+
+<button onclick="bookRoom()" class="bg-green-600 px-4 py-2 mt-2">Book Now</button>
+
+<h3 class="mt-4">My Bookings</h3>
+<div id="myBookings"></div>
+
+</div>
+
+<!-- OWNER DASHBOARD -->
+<div id="ownerView" class="hidden">
+<h2 class="text-xl">Owner Dashboard</h2>
+<div id="bookings"></div>
+</div>
 
 </div>
 
 <script>
 
-// 🔥 PASTE YOUR FIREBASE CONFIG HERE
+// 🔥 YOUR FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
   authDomain: "hotel-booking-3b5ce.firebaseapp.com",
@@ -66,24 +73,14 @@ const db = firebase.firestore();
 // SIGNUP
 function signup(){
   auth.createUserWithEmailAndPassword(email.value, password.value)
-  .then(()=>{
-    alert("Account created!");
-  })
-  .catch((error)=>{
-    alert(error.message);
-    console.log(error);
-  });
+  .then(()=> alert("Account created!"))
+  .catch(e=>alert(e.message));
 }
 
+// LOGIN
 function login(){
   auth.signInWithEmailAndPassword(email.value, password.value)
-  .then(()=>{
-    alert("Logged in!");
-  })
-  .catch((error)=>{
-    alert(error.message);
-    console.log(error);
-  });
+  .catch(e=>alert(e.message));
 }
 
 // LOGOUT
@@ -91,37 +88,34 @@ function logout(){
   auth.signOut();
 }
 
-// AUTH STATE
+// AUTH CHECK
 auth.onAuthStateChanged(async (user)=>{
   if(user){
-    document.getElementById("authBox").style.display = "none";
-    document.getElementById("app").classList.remove("hidden");
+    authBox.style.display = "none";
+    app.classList.remove("hidden");
 
-    // CHECK ROLE
     let snap = await db.collection("users")
       .where("email","==",user.email)
       .get();
 
     let isOwner = false;
-
     snap.forEach(doc=>{
-      if(doc.data().role === "owner"){
-        isOwner = true;
-      }
+      if(doc.data().role === "owner") isOwner = true;
     });
 
     if(isOwner){
-      document.getElementById("ownerView").classList.remove("hidden");
-      document.getElementById("userView").classList.add("hidden");
+      ownerView.classList.remove("hidden");
+      userView.classList.add("hidden");
       loadBookings();
     } else {
-      document.getElementById("ownerView").classList.add("hidden");
-      document.getElementById("userView").classList.remove("hidden");
+      ownerView.classList.add("hidden");
+      userView.classList.remove("hidden");
+      loadMyBookings();
     }
 
   } else {
-    document.getElementById("authBox").style.display = "block";
-    document.getElementById("app").classList.add("hidden");
+    authBox.style.display = "block";
+    app.classList.add("hidden");
   }
 });
 
@@ -129,19 +123,40 @@ auth.onAuthStateChanged(async (user)=>{
 function bookRoom(){
   db.collection("hotelBookings").add({
     user: auth.currentUser.email,
+    name: name.value,
+    mobile: mobile.value,
+    email: email2.value,
     checkin: checkin.value,
     checkout: checkout.value,
     status: "pending"
   });
 
-  alert("Booking sent!");
+  alert("Booking Sent!");
 }
 
-// LOAD BOOKINGS (OWNER)
+// USER BOOKINGS
+function loadMyBookings(){
+  db.collection("hotelBookings")
+  .where("user","==",auth.currentUser.email)
+  .onSnapshot(snapshot=>{
+    let html = "";
+    snapshot.forEach(doc=>{
+      let b = doc.data();
+      html += `
+        <div class="bg-gray-800 p-2 m-2">
+          ${b.checkin} → ${b.checkout}<br>
+          Status: ${b.status}
+        </div>
+      `;
+    });
+    myBookings.innerHTML = html;
+  });
+}
+
+// OWNER BOOKINGS
 function loadBookings(){
   db.collection("hotelBookings").onSnapshot(snapshot=>{
     let html = "";
-
     snapshot.forEach(doc=>{
       let b = doc.data();
 
@@ -149,30 +164,23 @@ function loadBookings(){
         <div class="bg-gray-800 p-2 m-2">
           ${b.user}<br>
           ${b.checkin} → ${b.checkout}<br>
-          Status: ${b.status}<br>
+          ${b.status}<br>
 
           <button onclick="approve('${doc.id}')" class="bg-green-600 px-2">Approve</button>
           <button onclick="reject('${doc.id}')" class="bg-red-600 px-2">Reject</button>
         </div>
       `;
     });
-
-    document.getElementById("bookings").innerHTML = html;
+    bookings.innerHTML = html;
   });
 }
 
-// APPROVE
 function approve(id){
-  db.collection("hotelBookings").doc(id).update({
-    status: "approved"
-  });
+  db.collection("hotelBookings").doc(id).update({status:"approved"});
 }
 
-// REJECT
 function reject(id){
-  db.collection("hotelBookings").doc(id).update({
-    status: "rejected"
-  });
+  db.collection("hotelBookings").doc(id).update({status:"rejected"});
 }
 
 </script>
