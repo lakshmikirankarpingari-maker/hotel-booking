@@ -65,20 +65,25 @@ const db = firebase.firestore();
 
 // SIGNUP
 function signup(){
-  auth.createUserWithEmailAndPassword(
-    email.value,
-    password.value
-  ).then(()=>{
+  auth.createUserWithEmailAndPassword(email.value, password.value)
+  .then(()=>{
     alert("Account created!");
+  })
+  .catch((error)=>{
+    alert(error.message);
+    console.log(error);
   });
 }
 
-// LOGIN
 function login(){
-  auth.signInWithEmailAndPassword(
-    email.value,
-    password.value
-  );
+  auth.signInWithEmailAndPassword(email.value, password.value)
+  .then(()=>{
+    alert("Logged in!");
+  })
+  .catch((error)=>{
+    alert(error.message);
+    console.log(error);
+  });
 }
 
 // LOGOUT
