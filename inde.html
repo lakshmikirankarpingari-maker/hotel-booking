@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Booking App</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+</head>
+
+<body class="bg-gray-900 text-white p-4">
+
+<h1 class="text-2xl mb-4">🏨 Hotel Booking App</h1>
+
+<!-- LOGIN -->
+<div id="authBox">
+  <input id="email" placeholder="Email" class="p-2 m-1 text-black">
+  <input id="password" type="password" placeholder="Password" class="p-2 m-1 text-black">
+  <button onclick="signup()" class="bg-green-600 px-3 py-1">Signup</button>
+  <button onclick="login()" class="bg-blue-600 px-3 py-1">Login</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
+  <button onclick="logout()" class="bg-red-600 px-3 py-1 mb-3">Logout</button>
+
+  <!-- CUSTOMER VIEW -->
+  <div id="userView">
+    <h2 class="text-xl">Book Room</h2>
+
+    <input id="checkin" type="date" class="p-2 m-1 text-black">
+    <input id="checkout" type="date" class="p-2 m-1 text-black">
+
+    <button onclick="bookRoom()" class="bg-green-600 px-3 py-1">Book</button>
+  </div>
+
+  <!-- OWNER VIEW -->
+  <div id="ownerView" class="hidden">
+    <h2 class="text-xl">Owner Dashboard</h2>
+    <div id="bookings"></div>
+  </div>
+
+</div>
+
+<script>
+
+// 🔥 PASTE YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {
+  apiKey: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
+  authDomain: "hotel-booking-3b5ce.firebaseapp.com",
+  projectId: "hotel-booking-3b5ce",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// SIGNUP
+function signup(){
+  auth.createUserWithEmailAndPassword(
+    email.value,
+    password.value
+  ).then(()=>{
+    alert("Account created!");
+  });
+}
+
+// LOGIN
+function login(){
+  auth.signInWithEmailAndPassword(
+    email.value,
+    password.value
+  );
+}
+
+// LOGOUT
+function logout(){
+  auth.signOut();
+}
+
+// AUTH STATE
+auth.onAuthStateChanged(async (user)=>{
+  if(user){
+    document.getElementById("authBox").style.display = "none";
+    document.getElementById("app").classList.remove("hidden");
+
+    // CHECK ROLE
+    let snap = await db.collection("users")
+      .where("email","==",user.email)
+      .get();
+
+    let isOwner = false;
+
+    snap.forEach(doc=>{
+      if(doc.data().role === "owner"){
+        isOwner = true;
+      }
+    });
+
+    if(isOwner){
+      document.getElementById("ownerView").classList.remove("hidden");
+      document.getElementById("userView").classList.add("hidden");
+      loadBookings();
+    } else {
+      document.getElementById("ownerView").classList.add("hidden");
+      document.getElementById("userView").classList.remove("hidden");
+    }
+
+  } else {
+    document.getElementById("authBox").style.display = "block";
+    document.getElementById("app").classList.add("hidden");
+  }
+});
+
+// BOOK ROOM
+function bookRoom(){
+  db.collection("hotelBookings").add({
+    user: auth.currentUser.email,
+    checkin: checkin.value,
+    checkout: checkout.value,
+    status: "pending"
+  });
+
+  alert("Booking sent!");
+}
+
+// LOAD BOOKINGS (OWNER)
+function loadBookings(){
+  db.collection("hotelBookings").onSnapshot(snapshot=>{
+    let html = "";
+
+    snapshot.forEach(doc=>{
+      let b = doc.data();
+
+      html += `
+        <div class="bg-gray-800 p-2 m-2">
+          ${b.user}<br>
+          ${b.checkin} → ${b.checkout}<br>
+          Status: ${b.status}<br>
+
+          <button onclick="approve('${doc.id}')" class="bg-green-600 px-2">Approve</button>
+          <button onclick="reject('${doc.id}')" class="bg-red-600 px-2">Reject</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("bookings").innerHTML = html;
+  });
+}
+
+// APPROVE
+function approve(id){
+  db.collection("hotelBookings").doc(id).update({
+    status: "approved"
+  });
+}
+
+// REJECT
+function reject(id){
+  db.collection("hotelBookings").doc(id).update({
+    status: "rejected"
+  });
+}
+
+</script>
+
+</body>
+</html>
