@@ -17,33 +17,22 @@
   <div class="bg-white p-6 rounded-xl shadow w-80">
     <h2 class="text-xl font-bold mb-4 text-center">Login / Signup</h2>
 
-    <input id="email" placeholder="Email"
-      class="w-full mb-3 p-2 border rounded">
+    <input id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
+    <input id="password" type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded">
 
-    <input id="password" type="password" placeholder="Password"
-      class="w-full mb-3 p-2 border rounded">
-
-    <button onclick="login()"
-      class="w-full bg-blue-500 text-white p-2 rounded mb-2">
-      Login
-    </button>
-
-    <button onclick="signup()"
-      class="w-full bg-green-500 text-white p-2 rounded">
-      Signup
-    </button>
+    <button onclick="login()" class="w-full bg-blue-500 text-white p-2 rounded mb-2">Login</button>
+    <button onclick="signup()" class="w-full bg-green-500 text-white p-2 rounded">Signup</button>
   </div>
 </div>
 
 <!-- APP -->
 <div id="appPage" style="display:none;" class="p-6">
 
-  <!-- BOOKING FORM -->
-  <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
+  <!-- BOOKING SECTION (USER ONLY) -->
+  <div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
     <h2 class="text-2xl font-bold mb-4 text-center">🏨 Book Room</h2>
 
-    <input id="name" placeholder="Your Name"
-      class="w-full mb-3 p-2 border rounded">
+    <input id="name" placeholder="Your Name" class="w-full mb-3 p-2 border rounded">
 
     <select id="room" class="w-full mb-3 p-2 border rounded">
       <option value="">Select Room</option>
@@ -52,43 +41,42 @@
       <option>Suite</option>
     </select>
 
-    <input type="date" id="checkIn"
-      class="w-full mb-3 p-2 border rounded">
+    <input type="date" id="checkIn" class="w-full mb-3 p-2 border rounded">
+    <input type="date" id="checkOut" class="w-full mb-3 p-2 border rounded">
 
-    <input type="date" id="checkOut"
-      class="w-full mb-3 p-2 border rounded">
-
-    <button onclick="bookRoom()"
-      class="w-full bg-blue-500 text-white p-2 rounded">
+    <button onclick="bookRoom()" class="w-full bg-blue-500 text-white p-2 rounded">
       Book Now
     </button>
 
-    <button onclick="logout()"
-      class="w-full mt-3 bg-red-500 text-white p-2 rounded">
+    <button onclick="logout()" class="w-full mt-3 bg-red-500 text-white p-2 rounded">
       Logout
     </button>
   </div>
 
   <!-- USER BOOKINGS -->
-  <div class="max-w-md mx-auto mt-6">
+  <div id="userBookingsSection" class="max-w-md mx-auto mt-6">
     <h3 class="text-xl font-bold mb-2">📋 My Bookings</h3>
     <div id="myBookings"></div>
   </div>
 
-  <!-- ADMIN PANEL -->
+  <!-- ADMIN PANEL (OWNER ONLY) -->
   <div id="adminPanel" class="max-w-md mx-auto mt-6 hidden">
-    <h3 class="text-xl font-bold mb-2">🧑‍💼 All Bookings</h3>
+    <h3 class="text-xl font-bold mb-2">🧑‍💼 Admin Dashboard</h3>
     <div id="allBookings"></div>
+
+    <button onclick="logout()" class="w-full mt-4 bg-red-500 text-white p-2 rounded">
+      Logout
+    </button>
   </div>
 
 </div>
 
 <script>
-/* 🔥 PUT YOUR FIREBASE CONFIG HERE */
+/* 🔥 YOUR FIREBASE CONFIG */
 const firebaseConfig = {
-  apiKey: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
-  authDomain: "hotel-booking-3b5ce.firebaseapp.com",
-  projectId: "hotel-booking-3b5ce"
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -96,7 +84,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* ✅ OWNER EMAIL (ADDED) */
+/* ✅ OWNER EMAIL */
 const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com".trim().toLowerCase();
 
 /* AUTH STATE */
@@ -105,13 +93,21 @@ auth.onAuthStateChanged(user => {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("appPage").style.display = "block";
 
-    const userEmail = user.email.trim().toLowerCase();
+    const email = user.email.trim().toLowerCase();
 
-    if (userEmail === OWNER_EMAIL) {
+    if (email === OWNER_EMAIL) {
+      // OWNER VIEW
+      document.getElementById("bookingSection").style.display = "none";
+      document.getElementById("userBookingsSection").style.display = "none";
       document.getElementById("adminPanel").classList.remove("hidden");
+
       loadAllBookings();
     } else {
+      // USER VIEW
+      document.getElementById("bookingSection").style.display = "block";
+      document.getElementById("userBookingsSection").style.display = "block";
       document.getElementById("adminPanel").classList.add("hidden");
+
       loadMyBookings();
     }
   } else {
@@ -221,15 +217,8 @@ function loadAllBookings() {
             <p>${data.checkIn} → ${data.checkOut}</p>
             <p>Status: ${data.status}</p>
 
-            <button onclick="accept('${doc.id}')"
-              class="bg-green-500 text-white px-2 py-1 mt-1 rounded">
-              Accept
-            </button>
-
-            <button onclick="reject('${doc.id}')"
-              class="bg-red-500 text-white px-2 py-1 mt-1 rounded">
-              Reject
-            </button>
+            <button onclick="accept('${doc.id}')" class="bg-green-500 text-white px-2 py-1 mt-1 rounded">Accept</button>
+            <button onclick="reject('${doc.id}')" class="bg-red-500 text-white px-2 py-1 mt-1 rounded">Reject</button>
           </div>
         `;
       });
