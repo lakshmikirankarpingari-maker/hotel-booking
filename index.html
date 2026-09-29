@@ -57,13 +57,13 @@
 
       <div class="bg-white rounded-xl shadow overflow-hidden">
         <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no"
-             class="w-full h-48 object-cover">
+             class="w-full h-48 object-contain bg-gray-100 rounded-xl hover:scale-105 transition duration-300">
         <div class="p-3"><b>Standard Room</b></div>
       </div>
 
       <div class="bg-white rounded-xl shadow overflow-hidden">
         <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no"
-             class="w-full h-48 object-cover">
+             class="w-full h-48 object-contain bg-gray-100 rounded-xl hover:scale-105 transition duration-300">
         <div class="p-3"><b>Deluxe Room</b></div>
       </div>
 
@@ -104,7 +104,7 @@
     <div id="allBookings"></div>
   </div>
 
-  <button onclick="logout()" class="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded">
+  <button onclick="logout()" class="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded hover:scale-105 transition">
     Logout
   </button>
 
@@ -138,6 +138,9 @@ auth.onAuthStateChanged(user=>{
       adminPanel.classList.add("hidden");
       loadMyBookings();
     }
+  } else {
+    loginPage.style.display="flex";
+    appPage.style.display="none";
   }
 });
 
@@ -149,6 +152,14 @@ function login(){
 function signup(){
   auth.createUserWithEmailAndPassword(email.value,password.value)
   .catch(e=>alert(e.message));
+}
+
+/* LOGOUT */
+function logout(){
+  auth.signOut().then(()=>{
+    document.getElementById("appPage").style.display="none";
+    document.getElementById("loginPage").style.display="flex";
+  });
 }
 
 /* BOOK */
@@ -210,8 +221,6 @@ function loadAllBookings(){
 
 function accept(id){db.collection("bookings").doc(id).update({status:"accepted"});}
 function reject(id){db.collection("bookings").doc(id).update({status:"rejected"});}
-
-function logout(){auth.signOut();}
 </script>
 
 </body>
