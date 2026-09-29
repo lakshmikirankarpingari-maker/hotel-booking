@@ -33,44 +33,15 @@
 <!-- APP -->
 <div id="appPage" style="display:none;">
 
-  <!-- HERO -->
+  <!-- HEADER -->
   <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center">
     <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
     <p>Muthukur Rd, Andhra Pradesh</p>
     <p class="text-sm mt-2">Clean • Hygienic • Family Friendly • 24x7 Hot Water</p>
   </div>
 
-  <!-- ROOMS -->
-  <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-
-    <div class="bg-white rounded-xl shadow">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
-      <div class="p-4">
-        <h3 class="font-bold">Standard Room</h3>
-        <p>Affordable & clean</p>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
-      <div class="p-4">
-        <h3 class="font-bold">Deluxe Room</h3>
-        <p>Comfort + AC</p>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QEduP6qA02traW8-8ctOFCmJYtFiLmHFrnE9pxyrcanwo5-ga9E6ZWZy8o4UMfYQ7_8Dj_IyznXiKDdrcvmzffZbGJ8yi6NkhJDyppx3i17bEU9QPWigB1dm_H1cvYxPreVMyv=w224-h397-k-no" class="rounded-t-xl w-full h-40 object-cover">
-      <div class="p-4">
-        <h3 class="font-bold">Suite</h3>
-        <p>Premium experience</p>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- BOOKING (USER ONLY) -->
-  <div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
+  <!-- BOOKING (USER) -->
+  <div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow mt-6">
     <h2 class="text-xl font-bold mb-4 text-center">Book Your Stay</h2>
 
     <input id="name" placeholder="Name" class="w-full mb-3 p-2 border rounded">
@@ -105,9 +76,9 @@
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
-  authDomain: "hotel-booking-3b5ce.firebaseapp.com"
-  projectId: "hotel-booking-3b5ce"
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -130,7 +101,9 @@ auth.onAuthStateChanged(user => {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("appPage").style.display = "block";
 
-    if (user.email.toLowerCase() === OWNER_EMAIL.toLowerCase()) {
+    const email = user.email.toLowerCase();
+
+    if (email === OWNER_EMAIL.toLowerCase()) {
       document.getElementById("bookingSection").style.display = "none";
       document.getElementById("userBookingsSection").style.display = "none";
       document.getElementById("adminPanel").classList.remove("hidden");
@@ -141,25 +114,34 @@ auth.onAuthStateChanged(user => {
       document.getElementById("adminPanel").classList.add("hidden");
       loadMyBookings();
     }
+  } else {
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("appPage").style.display = "none";
   }
 });
 
 /* LOGIN */
 function login() {
   showLoading();
-  auth.signInWithEmailAndPassword(
-    email.value.trim(),
-    password.value.trim()
-  ).finally(hideLoading);
+
+  const emailVal = document.getElementById("email").value.trim();
+  const passwordVal = document.getElementById("password").value.trim();
+
+  auth.signInWithEmailAndPassword(emailVal, passwordVal)
+    .catch(err => alert(err.message))
+    .finally(hideLoading);
 }
 
 /* SIGNUP */
 function signup() {
   showLoading();
-  auth.createUserWithEmailAndPassword(
-    email.value.trim(),
-    password.value.trim()
-  ).finally(hideLoading);
+
+  const emailVal = document.getElementById("email").value.trim();
+  const passwordVal = document.getElementById("password").value.trim();
+
+  auth.createUserWithEmailAndPassword(emailVal, passwordVal)
+    .catch(err => alert(err.message))
+    .finally(hideLoading);
 }
 
 /* LOGOUT */
@@ -171,12 +153,30 @@ function logout() {
 function bookRoom() {
   showLoading();
 
+  const user = auth.currentUser;
+  const nameVal = document.getElementById("name").value.trim();
+  const roomVal = document.getElementById("room").value;
+  const checkInVal = document.getElementById("checkIn").value;
+  const checkOutVal = document.getElementById("checkOut").value;
+
+  if (!nameVal || !roomVal || !checkInVal || !checkOutVal) {
+    alert("Fill all fields");
+    hideLoading();
+    return;
+  }
+
+  if (checkOutVal <= checkInVal) {
+    alert("Check-out must be after check-in");
+    hideLoading();
+    return;
+  }
+
   db.collection("bookings").add({
-    userId: auth.currentUser.uid,
-    name: name.value,
-    roomType: room.value,
-    checkIn: checkIn.value,
-    checkOut: checkOut.value,
+    userId: user.uid,
+    name: nameVal,
+    roomType: roomVal,
+    checkIn: checkInVal,
+    checkOut: checkOutVal,
     status: "pending"
   }).finally(hideLoading);
 }
@@ -185,39 +185,41 @@ function bookRoom() {
 function loadMyBookings() {
   db.collection("bookings")
     .where("userId", "==", auth.currentUser.uid)
-    .onSnapshot(s => {
+    .onSnapshot(snapshot => {
       let html = "";
-      s.forEach(doc => {
+      snapshot.forEach(doc => {
         const d = doc.data();
         html += `<div class="bg-white p-2 mb-2 rounded shadow">
           ${d.roomType} | ${d.status}
         </div>`;
       });
-      myBookings.innerHTML = html;
+      document.getElementById("myBookings").innerHTML = html;
     });
 }
 
 /* ADMIN */
 function loadAllBookings() {
-  db.collection("bookings").onSnapshot(s => {
-    let html = "";
-    s.forEach(doc => {
-      const d = doc.data();
-      html += `<div class="bg-white p-2 mb-2 rounded shadow">
-        ${d.name} - ${d.roomType} - ${d.status}
-        <button onclick="accept('${doc.id}')">✅</button>
-        <button onclick="reject('${doc.id}')">❌</button>
-      </div>`;
+  db.collection("bookings")
+    .onSnapshot(snapshot => {
+      let html = "";
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        html += `<div class="bg-white p-2 mb-2 rounded shadow">
+          ${d.name} - ${d.roomType} - ${d.status}
+          <button onclick="accept('${doc.id}')">✅</button>
+          <button onclick="reject('${doc.id}')">❌</button>
+        </div>`;
+      });
+      document.getElementById("allBookings").innerHTML = html;
     });
-    allBookings.innerHTML = html;
-  });
 }
 
 function accept(id) {
-  db.collection("bookings").doc(id).update({status:"accepted"});
+  db.collection("bookings").doc(id).update({ status: "accepted" });
 }
+
 function reject(id) {
-  db.collection("bookings").doc(id).update({status:"rejected"});
+  db.collection("bookings").doc(id).update({ status: "rejected" });
 }
 </script>
 
