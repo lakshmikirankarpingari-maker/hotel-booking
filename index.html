@@ -16,7 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gradient-to-br from-blue-100 to-purple-200">
 
 <!-- LOADING -->
 <div id="loading" class="fixed inset-0 bg-white flex items-center justify-center hidden z-50">
@@ -27,65 +27,77 @@
 <div id="loginPage" class="min-h-screen flex items-center justify-center">
   <div class="bg-white p-6 rounded-xl shadow w-80">
     <h2 class="text-xl font-bold mb-4 text-center">Login / Signup</h2>
+
     <input id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
     <input id="password" type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded">
-    <button onclick="login()" class="w-full bg-blue-600 text-white p-2 rounded mb-2">Login</button>
+
+    <button onclick="login()" class="w-full bg-blue-500 text-white p-2 rounded mb-2">Login</button>
     <button onclick="signup()" class="w-full bg-green-500 text-white p-2 rounded">Signup</button>
   </div>
 </div>
 
 <!-- APP -->
-<div id="appPage" class="hidden">
+<div id="appPage" style="display:none;">
 
-<!-- HERO -->
-<div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center">
-  <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
-  <p>Muthukur Rd • 4.5⭐ (54 reviews)</p>
-  <p class="text-sm mt-1">Clean • Hygienic • Family Friendly • 24x7 Hot Water</p>
-</div>
-
-<!-- FEATURES -->
-<div class="grid grid-cols-2 gap-3 p-4 text-center">
-  <div class="bg-white p-3 rounded shadow">🛏 Clean Rooms</div>
-  <div class="bg-white p-3 rounded shadow">🚿 Hot Water</div>
-  <div class="bg-white p-3 rounded shadow">📶 Free WiFi</div>
-  <div class="bg-white p-3 rounded shadow">👨‍👩‍👧 Family Friendly</div>
-</div>
-
-<!-- ROOMS -->
-<div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <div class="bg-white rounded-xl shadow">
-    <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
-    <div class="p-3"><b>Standard Room</b><br>₹800 / night</div>
+  <!-- HEADER -->
+  <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center">
+    <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
+    <p>Muthukur Rd • 4.5⭐</p>
+    <p class="text-sm mt-1">Clean • Hygienic • Family Friendly • 24x7 Hot Water</p>
   </div>
 
-  <div class="bg-white rounded-xl shadow">
-    <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
-    <div class="p-3"><b>Deluxe Room</b><br>₹1200 / night</div>
+  <!-- ROOM CARDS -->
+  <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="bg-white rounded-xl shadow">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
+      <div class="p-3"><b>Standard Room</b><br>₹800 / night</div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
+      <div class="p-3"><b>Deluxe Room</b><br>₹1200 / night</div>
+    </div>
   </div>
-</div>
 
-<!-- BOOKING -->
-<div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
-  <h2 class="font-bold mb-3">Book Room</h2>
-  <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
-  <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
-  <select id="room" class="w-full mb-2 p-2 border rounded">
-    <option>Standard</option>
-    <option>Deluxe</option>
-  </select>
-  <input type="date" id="checkIn" class="w-full mb-2 p-2 border rounded">
-  <input type="date" id="checkOut" class="w-full mb-2 p-2 border rounded">
-  <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-2 rounded">Book Now</button>
-</div>
+  <!-- GALLERY -->
+  <div class="p-4">
+    <h2 class="text-xl font-bold mb-3">📸 More Photos</h2>
+    <div class="grid grid-cols-2 gap-3">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TRhZaVhpk966rC_wywCoegKQOYB9yqULy3KjQ8nZAvqruPXrEb4RvQX8SBoqR8NFOce2m2tpmW-v8IQ-WmudC2zDESWGz_6nyV9mvd6aqoWwWxWhEd_nTUwCuWtWnTT_SrqYjMcEjihXHI=w224-h398-k-no" class="rounded-xl h-32 w-full object-cover">
+      <img src="https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=VdQrdkiKV8ZurtQA8cbiAQ&w=224&h=298" class="rounded-xl h-32 w-full object-cover">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QEduP6qA02traW8-8ctOFCmJYtFiLmHFrnE9pxyrcanwo5-ga9E6ZWZy8o4UMfYQ7_8Dj_IyznXiKDdrcvmzffZbGJ8yi6NkhJDyppx3i17bEU9QPWigB1dm_H1cvYxPreVMyv=w224-h397-k-no" class="rounded-xl h-32 w-full object-cover">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no" class="rounded-xl h-32 w-full object-cover">
+    </div>
+  </div>
 
-<!-- ADMIN -->
-<div id="adminPanel" class="hidden p-4">
-  <h3 class="font-bold text-xl mb-2">Admin Dashboard</h3>
-  <div id="allBookings"></div>
-</div>
+  <!-- BOOKING -->
+  <div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow mt-6">
+    <h2 class="font-bold mb-3">Book Room</h2>
 
-<button onclick="logout()" class="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded">Logout</button>
+    <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
+    <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
+
+    <select id="room" class="w-full mb-2 p-2 border rounded">
+      <option value="">Select Room</option>
+      <option>Standard</option>
+      <option>Deluxe</option>
+    </select>
+
+    <input type="date" id="checkIn" class="w-full mb-2 p-2 border rounded">
+    <input type="date" id="checkOut" class="w-full mb-2 p-2 border rounded">
+
+    <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-2 rounded">Book Now</button>
+
+    <div id="bookingStatus" class="text-center mt-3 text-green-600 font-semibold"></div>
+
+    <button onclick="logout()" class="w-full mt-3 bg-red-500 text-white p-2 rounded">Logout</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="adminPanel" class="max-w-md mx-auto mt-6 hidden">
+    <h3 class="font-bold text-xl mb-2">Admin Dashboard</h3>
+    <div id="allBookings"></div>
+  </div>
 
 </div>
 
@@ -95,22 +107,26 @@ const firebaseConfig = {
   authDomain: "hotel-booking-3b5ce.firebaseapp.com",
   projectId: "hotel-booking-3b5ce"
 };
-firebase.initializeApp(firebaseConfig);
 
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
 const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com";
 
+/* LOADING */
+function showLoading(){document.getElementById("loading").style.display="flex";}
+function hideLoading(){document.getElementById("loading").style.display="none";}
+
 /* AUTH */
 auth.onAuthStateChanged(user=>{
   if(user){
-    loginPage.style.display="none";
-    appPage.classList.remove("hidden");
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("appPage").style.display="block";
 
     if(user.email.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-      bookingSection.style.display="none";
-      adminPanel.classList.remove("hidden");
+      document.getElementById("bookingSection").style.display="none";
+      document.getElementById("adminPanel").classList.remove("hidden");
       loadBookings();
     }
   }
@@ -118,26 +134,62 @@ auth.onAuthStateChanged(user=>{
 
 /* LOGIN */
 function login(){
-  auth.signInWithEmailAndPassword(email.value,password.value)
-  .catch(e=>alert(e.message));
+  showLoading();
+  const email=document.getElementById("email").value.trim();
+  const pass=document.getElementById("password").value.trim();
+
+  auth.signInWithEmailAndPassword(email,pass)
+  .catch(e=>alert(e.message))
+  .finally(hideLoading);
 }
+
+/* SIGNUP */
 function signup(){
-  auth.createUserWithEmailAndPassword(email.value,password.value)
-  .catch(e=>alert(e.message));
+  showLoading();
+  const email=document.getElementById("email").value.trim();
+  const pass=document.getElementById("password").value.trim();
+
+  auth.createUserWithEmailAndPassword(email,pass)
+  .catch(e=>alert(e.message))
+  .finally(hideLoading);
 }
 
 /* BOOK */
 function bookRoom(){
+  const user=auth.currentUser;
+
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const room=document.getElementById("room").value;
+  const inDate=document.getElementById("checkIn").value;
+  const outDate=document.getElementById("checkOut").value;
+
+  if(!name||!phone||!room||!inDate||!outDate){
+    alert("Fill all fields");return;
+  }
+
+  showLoading();
+
   db.collection("bookings").add({
-    name:name.value,
-    phone:phone.value,
-    room:room.value,
-    checkIn:checkIn.value,
-    checkOut:checkOut.value,
+    userId:user.uid,
+    name,phone,room,inDate,outDate,
     status:"pending",
     createdAt:new Date()
+  })
+  .then(()=>{
+    hideLoading();
+    document.getElementById("bookingStatus").innerText="✅ Booking sent! Waiting for approval.";
+
+    document.getElementById("name").value="";
+    document.getElementById("phone").value="";
+    document.getElementById("room").value="";
+    document.getElementById("checkIn").value="";
+    document.getElementById("checkOut").value="";
+  })
+  .catch(e=>{
+    hideLoading();
+    alert(e.message);
   });
-  alert("Booking sent!");
 }
 
 /* ADMIN */
@@ -152,14 +204,20 @@ function loadBookings(){
         <button onclick="reject('${d.id}')">✖</button>
       </div>`;
     });
-    allBookings.innerHTML=h;
+    document.getElementById("allBookings").innerHTML=h;
   });
 }
 
-function accept(id){db.collection("bookings").doc(id).update({status:"accepted"})}
-function reject(id){db.collection("bookings").doc(id).update({status:"rejected"})}
+function accept(id){db.collection("bookings").doc(id).update({status:"accepted"});}
+function reject(id){db.collection("bookings").doc(id).update({status:"rejected"});}
 
-function logout(){auth.signOut()}
+function logout(){auth.signOut();}
+
+/* PWA */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js');
+}
 </script>
+
 </body>
 </html>
