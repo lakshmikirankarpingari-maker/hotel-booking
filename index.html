@@ -84,11 +84,8 @@
 </div>
 
 <script>
-/* 🔥 PASTE YOUR FIREBASE CONFIG HERE */
+/* 🔥 PUT YOUR FIREBASE CONFIG HERE */
 const firebaseConfig = {
-  apiKey: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
-  authDomain: "hotel-booking-3b5ce.firebaseapp.com",
-  projectId: "hotel-booking-3b5ce",
   apiKey: <!DOCTYPE html>
 <html>
 <head>
@@ -175,7 +172,95 @@ const firebaseConfig = {
 </div>
 
 <script>
-/* 🔥 PASTE YOUR FIREBASE CONFIG HERE */
+/* 🔥 PUT YOUR FIREBASE CONFIG HERE */
+const firebaseConfig = {
+  apiKey: <!DOCTYPE html>
+<html>
+<head>
+  <title>Hotel Booking App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<!-- LOGIN -->
+<div id="loginPage" class="min-h-screen flex items-center justify-center">
+  <div class="bg-white p-6 rounded-xl shadow w-80">
+    <h2 class="text-xl font-bold mb-4 text-center">Login / Signup</h2>
+
+    <input id="email" placeholder="Email"
+      class="w-full mb-3 p-2 border rounded">
+
+    <input id="password" type="password" placeholder="Password"
+      class="w-full mb-3 p-2 border rounded">
+
+    <button onclick="login()"
+      class="w-full bg-blue-500 text-white p-2 rounded mb-2">
+      Login
+    </button>
+
+    <button onclick="signup()"
+      class="w-full bg-green-500 text-white p-2 rounded">
+      Signup
+    </button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appPage" style="display:none;" class="p-6">
+
+  <!-- BOOKING FORM -->
+  <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
+    <h2 class="text-2xl font-bold mb-4 text-center">🏨 Book Room</h2>
+
+    <input id="name" placeholder="Your Name"
+      class="w-full mb-3 p-2 border rounded">
+
+    <select id="room" class="w-full mb-3 p-2 border rounded">
+      <option value="">Select Room</option>
+      <option>Standard</option>
+      <option>Deluxe</option>
+      <option>Suite</option>
+    </select>
+
+    <input type="date" id="checkIn"
+      class="w-full mb-3 p-2 border rounded">
+
+    <input type="date" id="checkOut"
+      class="w-full mb-3 p-2 border rounded">
+
+    <button onclick="bookRoom()"
+      class="w-full bg-blue-500 text-white p-2 rounded">
+      Book Now
+    </button>
+
+    <button onclick="logout()"
+      class="w-full mt-3 bg-red-500 text-white p-2 rounded">
+      Logout
+    </button>
+  </div>
+
+  <!-- USER BOOKINGS -->
+  <div class="max-w-md mx-auto mt-6">
+    <h3 class="text-xl font-bold mb-2">📋 My Bookings</h3>
+    <div id="myBookings"></div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="max-w-md mx-auto mt-6 hidden">
+    <h3 class="text-xl font-bold mb-2">🧑‍💼 All Bookings</h3>
+    <div id="allBookings"></div>
+  </div>
+
+</div>
+
+<script>
+/* 🔥 PUT YOUR FIREBASE CONFIG HERE */
 const firebaseConfig = {
   apiKey: "YOUR_KEY",
   authDomain: "YOUR_DOMAIN",
@@ -187,8 +272,8 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* ✅ SET YOUR OWNER EMAIL HERE */
-const OWNER_EMAIL = "your-email@gmail.com".trim().toLowerCase();
+/* ✅ OWNER EMAIL (ADDED) */
+const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com".trim().toLowerCase();
 
 /* AUTH STATE */
 auth.onAuthStateChanged(user => {
@@ -198,17 +283,10 @@ auth.onAuthStateChanged(user => {
 
     const userEmail = user.email.trim().toLowerCase();
 
-    console.log("Logged in:", userEmail);
-    console.log("Owner:", OWNER_EMAIL);
-
     if (userEmail === OWNER_EMAIL) {
-      console.log("ADMIN MODE");
-
       document.getElementById("adminPanel").classList.remove("hidden");
       loadAllBookings();
     } else {
-      console.log("USER MODE");
-
       document.getElementById("adminPanel").classList.add("hidden");
       loadMyBookings();
     }
@@ -235,10 +313,7 @@ function login() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => alert("Login successful"))
-    .catch(err => {
-      console.log(err.code, err.message);
-      alert(err.message);
-    });
+    .catch(err => alert(err.message));
 }
 
 /* LOGOUT */
@@ -360,7 +435,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* ✅ SET YOUR OWNER EMAIL HERE */
+/* ✅ OWNER EMAIL (ADDED) */
 const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com".trim().toLowerCase();
 
 /* AUTH STATE */
@@ -371,17 +446,10 @@ auth.onAuthStateChanged(user => {
 
     const userEmail = user.email.trim().toLowerCase();
 
-    console.log("Logged in:", userEmail);
-    console.log("Owner:", OWNER_EMAIL);
-
-    if (userEmail === lakshmikirankarpingari@gmail.com) {
-      console.log("ADMIN MODE");
-
+    if (userEmail === OWNER_EMAIL) {
       document.getElementById("adminPanel").classList.remove("hidden");
       loadAllBookings();
     } else {
-      console.log("USER MODE");
-
       document.getElementById("adminPanel").classList.add("hidden");
       loadMyBookings();
     }
@@ -408,10 +476,170 @@ function login() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => alert("Login successful"))
-    .catch(err => {
-      console.log(err.code, err.message);
-      alert(err.message);
+    .catch(err => alert(err.message));
+}
+
+/* LOGOUT */
+function logout() {
+  auth.signOut();
+}
+
+/* BOOK ROOM */
+function bookRoom() {
+  const user = auth.currentUser;
+
+  const name = document.getElementById("name").value.trim();
+  const room = document.getElementById("room").value;
+  const checkIn = document.getElementById("checkIn").value;
+  const checkOut = document.getElementById("checkOut").value;
+
+  if (!name || !room || !checkIn || !checkOut) {
+    alert("Fill all fields");
+    return;
+  }
+
+  if (checkOut <= checkIn) {
+    alert("Check-out must be after check-in");
+    return;
+  }
+
+  db.collection("bookings").add({
+    userId: user.uid,
+    name,
+    roomType: room,
+    checkIn,
+    checkOut,
+    status: "pending",
+    createdAt: new Date()
+  });
+
+  alert("Booking successful!");
+}
+
+/* USER BOOKINGS */
+function loadMyBookings() {
+  const user = auth.currentUser;
+
+  db.collection("bookings")
+    .where("userId", "==", user.uid)
+    .onSnapshot(snapshot => {
+      let html = "";
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+
+        let color = "gray";
+        if (data.status === "accepted") color = "green";
+        if (data.status === "rejected") color = "red";
+
+        html += `
+          <div class="bg-white p-3 mb-2 rounded shadow">
+            <p><b>${data.roomType}</b></p>
+            <p>${data.checkIn} → ${data.checkOut}</p>
+            <p class="text-${color}-600">Status: ${data.status}</p>
+          </div>
+        `;
+      });
+
+      document.getElementById("myBookings").innerHTML = html;
     });
+}
+
+/* ADMIN BOOKINGS */
+function loadAllBookings() {
+  db.collection("bookings")
+    .onSnapshot(snapshot => {
+      let html = "";
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+
+        html += `
+          <div class="bg-white p-3 mb-2 rounded shadow">
+            <p><b>${data.name}</b> - ${data.roomType}</p>
+            <p>${data.checkIn} → ${data.checkOut}</p>
+            <p>Status: ${data.status}</p>
+
+            <button onclick="accept('${doc.id}')"
+              class="bg-green-500 text-white px-2 py-1 mt-1 rounded">
+              Accept
+            </button>
+
+            <button onclick="reject('${doc.id}')"
+              class="bg-red-500 text-white px-2 py-1 mt-1 rounded">
+              Reject
+            </button>
+          </div>
+        `;
+      });
+
+      document.getElementById("allBookings").innerHTML = html;
+    });
+}
+
+/* ACCEPT / REJECT */
+function accept(id) {
+  db.collection("bookings").doc(id).update({ status: "accepted" });
+}
+
+function reject(id) {
+  db.collection("bookings").doc(id).update({ status: "rejected" });
+}
+</script>
+
+</body>
+</html>,
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* ✅ OWNER EMAIL (ADDED) */
+const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com".trim().toLowerCase();
+
+/* AUTH STATE */
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("appPage").style.display = "block";
+
+    const userEmail = user.email.trim().toLowerCase();
+
+    if (userEmail === OWNER_EMAIL) {
+      document.getElementById("adminPanel").classList.remove("hidden");
+      loadAllBookings();
+    } else {
+      document.getElementById("adminPanel").classList.add("hidden");
+      loadMyBookings();
+    }
+  } else {
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("appPage").style.display = "none";
+  }
+});
+
+/* SIGNUP */
+function signup() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(() => alert("Signup successful"))
+    .catch(err => alert(err.message));
+}
+
+/* LOGIN */
+function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => alert("Login successful"))
+    .catch(err => alert(err.message));
 }
 
 /* LOGOUT */
