@@ -4,16 +4,20 @@
   <title>Sai Lakshmi Residency</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2563eb">
-
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <style>
+    .fade-in { animation: fade 0.5s ease-in; }
+    @keyframes fade {
+      from { opacity:0; transform: translateY(10px);}
+      to { opacity:1; transform: translateY(0);}
+    }
+  </style>
 </head>
 
 <body class="bg-gradient-to-br from-blue-100 to-purple-200">
@@ -25,79 +29,84 @@
 
 <!-- LOGIN -->
 <div id="loginPage" class="min-h-screen flex items-center justify-center">
-  <div class="bg-white p-6 rounded-xl shadow w-80">
+  <div class="bg-white p-6 rounded-xl shadow w-80 fade-in">
     <h2 class="text-xl font-bold mb-4 text-center">Login / Signup</h2>
 
     <input id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
     <input id="password" type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded">
 
-    <button onclick="login()" class="w-full bg-blue-500 text-white p-2 rounded mb-2">Login</button>
-    <button onclick="signup()" class="w-full bg-green-500 text-white p-2 rounded">Signup</button>
+    <button onclick="login()" class="w-full bg-blue-500 text-white p-2 rounded mb-2 hover:scale-105 transition">Login</button>
+    <button onclick="signup()" class="w-full bg-green-500 text-white p-2 rounded hover:scale-105 transition">Signup</button>
   </div>
 </div>
 
 <!-- APP -->
 <div id="appPage" style="display:none;">
 
-  <!-- HEADER -->
-  <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center">
-    <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
-    <p>Muthukur Rd • 4.5⭐</p>
-    <p class="text-sm mt-1">Clean • Hygienic • Family Friendly • 24x7 Hot Water</p>
-  </div>
+  <!-- USER UI -->
+  <div id="userUI">
 
-  <!-- ROOM CARDS -->
-  <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div class="bg-white rounded-xl shadow">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
-      <div class="p-3"><b>Standard Room</b><br>₹800 / night</div>
+    <!-- HEADER -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center fade-in">
+      <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
+      <p>Clean • Hygienic • Family Friendly</p>
     </div>
 
-    <div class="bg-white rounded-xl shadow">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
-      <div class="p-3"><b>Deluxe Room</b><br>₹1200 / night</div>
+    <!-- ROOMS -->
+    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 fade-in">
+
+      <div class="bg-white rounded-xl shadow overflow-hidden">
+        <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no"
+             class="w-full h-48 object-cover">
+        <div class="p-3"><b>Standard Room</b></div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow overflow-hidden">
+        <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no"
+             class="w-full h-48 object-cover">
+        <div class="p-3"><b>Deluxe Room</b></div>
+      </div>
+
     </div>
-  </div>
 
-  <!-- GALLERY -->
-  <div class="p-4">
-    <h2 class="text-xl font-bold mb-3">📸 More Photos</h2>
-    <div class="grid grid-cols-2 gap-3">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TRhZaVhpk966rC_wywCoegKQOYB9yqULy3KjQ8nZAvqruPXrEb4RvQX8SBoqR8NFOce2m2tpmW-v8IQ-WmudC2zDESWGz_6nyV9mvd6aqoWwWxWhEd_nTUwCuWtWnTT_SrqYjMcEjihXHI=w224-h398-k-no" class="rounded-xl h-32 w-full object-cover">
-      <img src="https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=VdQrdkiKV8ZurtQA8cbiAQ&w=224&h=298" class="rounded-xl h-32 w-full object-cover">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QEduP6qA02traW8-8ctOFCmJYtFiLmHFrnE9pxyrcanwo5-ga9E6ZWZy8o4UMfYQ7_8Dj_IyznXiKDdrcvmzffZbGJ8yi6NkhJDyppx3i17bEU9QPWigB1dm_H1cvYxPreVMyv=w224-h397-k-no" class="rounded-xl h-32 w-full object-cover">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no" class="rounded-xl h-32 w-full object-cover">
+    <!-- BOOK -->
+    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow fade-in">
+      <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
+      <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
+
+      <select id="room" class="w-full mb-2 p-2 border rounded">
+        <option value="">Select Room</option>
+        <option>Standard</option>
+        <option>Deluxe</option>
+      </select>
+
+      <input type="date" id="checkIn" class="w-full mb-2 p-2 border rounded">
+      <input type="date" id="checkOut" class="w-full mb-2 p-2 border rounded">
+
+      <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-2 rounded hover:scale-105 transition">
+        Book Now
+      </button>
+
+      <div id="bookingStatus" class="text-center mt-3 font-semibold"></div>
     </div>
-  </div>
 
-  <!-- BOOKING -->
-  <div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow mt-6">
-    <h2 class="font-bold mb-3">Book Room</h2>
+    <!-- MY BOOKINGS -->
+    <div class="max-w-md mx-auto mt-6 fade-in">
+      <h3 class="font-bold mb-2">My Bookings</h3>
+      <div id="myBookings"></div>
+    </div>
 
-    <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
-    <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
-
-    <select id="room" class="w-full mb-2 p-2 border rounded">
-      <option value="">Select Room</option>
-      <option>Standard</option>
-      <option>Deluxe</option>
-    </select>
-
-    <input type="date" id="checkIn" class="w-full mb-2 p-2 border rounded">
-    <input type="date" id="checkOut" class="w-full mb-2 p-2 border rounded">
-
-    <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-2 rounded">Book Now</button>
-
-    <div id="bookingStatus" class="text-center mt-3 text-green-600 font-semibold"></div>
-
-    <button onclick="logout()" class="w-full mt-3 bg-red-500 text-white p-2 rounded">Logout</button>
   </div>
 
   <!-- ADMIN -->
-  <div id="adminPanel" class="max-w-md mx-auto mt-6 hidden">
-    <h3 class="font-bold text-xl mb-2">Admin Dashboard</h3>
+  <div id="adminPanel" class="hidden p-4">
+    <h2 class="text-xl font-bold mb-3">Admin Dashboard</h2>
     <div id="allBookings"></div>
   </div>
+
+  <button onclick="logout()" class="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded">
+    Logout
+  </button>
 
 </div>
 
@@ -114,97 +123,88 @@ const db = firebase.firestore();
 
 const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com";
 
-/* LOADING */
-function showLoading(){document.getElementById("loading").style.display="flex";}
-function hideLoading(){document.getElementById("loading").style.display="none";}
-
 /* AUTH */
 auth.onAuthStateChanged(user=>{
   if(user){
-    document.getElementById("loginPage").style.display="none";
-    document.getElementById("appPage").style.display="block";
+    loginPage.style.display="none";
+    appPage.style.display="block";
 
     if(user.email.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-      document.getElementById("bookingSection").style.display="none";
-      document.getElementById("adminPanel").classList.remove("hidden");
-      loadBookings();
+      userUI.style.display="none";
+      adminPanel.classList.remove("hidden");
+      loadAllBookings();
+    } else {
+      userUI.style.display="block";
+      adminPanel.classList.add("hidden");
+      loadMyBookings();
     }
   }
 });
 
 /* LOGIN */
 function login(){
-  showLoading();
-  const email=document.getElementById("email").value.trim();
-  const pass=document.getElementById("password").value.trim();
-
-  auth.signInWithEmailAndPassword(email,pass)
-  .catch(e=>alert(e.message))
-  .finally(hideLoading);
+  auth.signInWithEmailAndPassword(email.value,password.value)
+  .catch(e=>alert(e.message));
 }
-
-/* SIGNUP */
 function signup(){
-  showLoading();
-  const email=document.getElementById("email").value.trim();
-  const pass=document.getElementById("password").value.trim();
-
-  auth.createUserWithEmailAndPassword(email,pass)
-  .catch(e=>alert(e.message))
-  .finally(hideLoading);
+  auth.createUserWithEmailAndPassword(email.value,password.value)
+  .catch(e=>alert(e.message));
 }
 
 /* BOOK */
 function bookRoom(){
-  const user=auth.currentUser;
-
-  const name=document.getElementById("name").value.trim();
-  const phone=document.getElementById("phone").value.trim();
-  const room=document.getElementById("room").value;
-  const inDate=document.getElementById("checkIn").value;
-  const outDate=document.getElementById("checkOut").value;
-
-  if(!name||!phone||!room||!inDate||!outDate){
-    alert("Fill all fields");return;
+  if(!name.value || !phone.value || !room.value || !checkIn.value || !checkOut.value){
+    alert("Fill all fields"); return;
   }
 
-  showLoading();
-
   db.collection("bookings").add({
-    userId:user.uid,
-    name,phone,room,inDate,outDate,
-    status:"pending",
-    createdAt:new Date()
-  })
-  .then(()=>{
-    hideLoading();
-    document.getElementById("bookingStatus").innerText="✅ Booking sent! Waiting for approval.";
+    userId: auth.currentUser.uid,
+    name: name.value,
+    phone: phone.value,
+    room: room.value,
+    checkIn: checkIn.value,
+    checkOut: checkOut.value,
+    status:"pending"
+  }).then(()=>{
+    bookingStatus.innerText="✅ Booking sent (Pending)";
+    name.value=phone.value=room.value=checkIn.value=checkOut.value="";
+  });
+}
 
-    document.getElementById("name").value="";
-    document.getElementById("phone").value="";
-    document.getElementById("room").value="";
-    document.getElementById("checkIn").value="";
-    document.getElementById("checkOut").value="";
-  })
-  .catch(e=>{
-    hideLoading();
-    alert(e.message);
+/* USER BOOKINGS */
+function loadMyBookings(){
+  db.collection("bookings")
+  .where("userId","==",auth.currentUser.uid)
+  .onSnapshot(s=>{
+    let h="";
+    s.forEach(d=>{
+      let data=d.data();
+      let color = data.status==="accepted"?"green":data.status==="rejected"?"red":"orange";
+
+      h+=`<div class="bg-white p-2 mb-2 rounded shadow">
+        ${data.room} (${data.checkIn})
+        <span style="color:${color}; font-weight:bold">
+          ${data.status}
+        </span>
+      </div>`;
+    });
+    myBookings.innerHTML=h;
   });
 }
 
 /* ADMIN */
-function loadBookings(){
+function loadAllBookings(){
   db.collection("bookings").onSnapshot(s=>{
     let h="";
     s.forEach(d=>{
       let data=d.data();
-      h+=`<div class="bg-white p-2 mb-2 shadow rounded">
-        ${data.name} (${data.phone}) - ${data.room} - ${data.status}
+      h+=`<div class="bg-white p-2 mb-2 rounded shadow">
+        ${data.name} - ${data.room} - ${data.status}
         <button onclick="accept('${d.id}')">✔</button>
         <button onclick="reject('${d.id}')">✖</button>
       </div>`;
     });
-    document.getElementById("allBookings").innerHTML=h;
+    allBookings.innerHTML=h;
   });
 }
 
@@ -212,11 +212,6 @@ function accept(id){db.collection("bookings").doc(id).update({status:"accepted"}
 function reject(id){db.collection("bookings").doc(id).update({status:"rejected"});}
 
 function logout(){auth.signOut();}
-
-/* PWA */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js');
-}
 </script>
 
 </body>
