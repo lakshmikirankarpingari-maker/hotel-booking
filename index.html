@@ -2,6 +2,12 @@
 <html>
 <head>
   <title>Sai Lakshmi Residency</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Firebase -->
@@ -10,67 +16,76 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 
-<body class="bg-gradient-to-br from-blue-100 to-purple-200">
+<body class="bg-gray-100">
 
 <!-- LOADING -->
-<div id="loading" class="fixed inset-0 bg-white flex items-center justify-center hidden">
-  <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+<div id="loading" class="fixed inset-0 bg-white flex items-center justify-center hidden z-50">
+  <div class="animate-spin h-16 w-16 border-4 border-blue-500 border-t-transparent rounded-full"></div>
 </div>
 
 <!-- LOGIN -->
 <div id="loginPage" class="min-h-screen flex items-center justify-center">
   <div class="bg-white p-6 rounded-xl shadow w-80">
     <h2 class="text-xl font-bold mb-4 text-center">Login / Signup</h2>
-
     <input id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
     <input id="password" type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded">
-
-    <button onclick="login()" class="w-full bg-blue-500 text-white p-2 rounded mb-2">Login</button>
+    <button onclick="login()" class="w-full bg-blue-600 text-white p-2 rounded mb-2">Login</button>
     <button onclick="signup()" class="w-full bg-green-500 text-white p-2 rounded">Signup</button>
   </div>
 </div>
 
 <!-- APP -->
-<div id="appPage" style="display:none;">
+<div id="appPage" class="hidden">
 
-  <!-- HEADER -->
-  <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center">
-    <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
-    <p>Muthukur Rd, Andhra Pradesh</p>
-    <p class="text-sm mt-2">Clean • Hygienic • Family Friendly • 24x7 Hot Water</p>
+<!-- HERO -->
+<div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center">
+  <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
+  <p>Muthukur Rd • 4.5⭐ (54 reviews)</p>
+  <p class="text-sm mt-1">Clean • Hygienic • Family Friendly • 24x7 Hot Water</p>
+</div>
+
+<!-- FEATURES -->
+<div class="grid grid-cols-2 gap-3 p-4 text-center">
+  <div class="bg-white p-3 rounded shadow">🛏 Clean Rooms</div>
+  <div class="bg-white p-3 rounded shadow">🚿 Hot Water</div>
+  <div class="bg-white p-3 rounded shadow">📶 Free WiFi</div>
+  <div class="bg-white p-3 rounded shadow">👨‍👩‍👧 Family Friendly</div>
+</div>
+
+<!-- ROOMS -->
+<div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="bg-white rounded-xl shadow">
+    <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
+    <div class="p-3"><b>Standard Room</b><br>₹800 / night</div>
   </div>
 
-  <!-- BOOKING (USER) -->
-  <div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow mt-6">
-    <h2 class="text-xl font-bold mb-4 text-center">Book Your Stay</h2>
-
-    <input id="name" placeholder="Name" class="w-full mb-3 p-2 border rounded">
-    <select id="room" class="w-full mb-3 p-2 border rounded">
-      <option value="">Select Room</option>
-      <option>Standard</option>
-      <option>Deluxe</option>
-      <option>Suite</option>
-    </select>
-
-    <input type="date" id="checkIn" class="w-full mb-3 p-2 border rounded">
-    <input type="date" id="checkOut" class="w-full mb-3 p-2 border rounded">
-
-    <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-2 rounded">Book Now</button>
-    <button onclick="logout()" class="w-full mt-3 bg-red-500 text-white p-2 rounded">Logout</button>
+  <div class="bg-white rounded-xl shadow">
+    <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no" class="rounded-t-xl w-full h-40 object-cover">
+    <div class="p-3"><b>Deluxe Room</b><br>₹1200 / night</div>
   </div>
+</div>
 
-  <!-- USER BOOKINGS -->
-  <div id="userBookingsSection" class="max-w-md mx-auto mt-6">
-    <h3 class="text-lg font-bold mb-2">My Bookings</h3>
-    <div id="myBookings"></div>
-  </div>
+<!-- BOOKING -->
+<div id="bookingSection" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
+  <h2 class="font-bold mb-3">Book Room</h2>
+  <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
+  <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
+  <select id="room" class="w-full mb-2 p-2 border rounded">
+    <option>Standard</option>
+    <option>Deluxe</option>
+  </select>
+  <input type="date" id="checkIn" class="w-full mb-2 p-2 border rounded">
+  <input type="date" id="checkOut" class="w-full mb-2 p-2 border rounded">
+  <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-2 rounded">Book Now</button>
+</div>
 
-  <!-- ADMIN -->
-  <div id="adminPanel" class="max-w-md mx-auto mt-6 hidden">
-    <h3 class="text-lg font-bold">Admin Dashboard</h3>
-    <div id="allBookings"></div>
-    <button onclick="logout()" class="w-full mt-3 bg-red-500 text-white p-2 rounded">Logout</button>
-  </div>
+<!-- ADMIN -->
+<div id="adminPanel" class="hidden p-4">
+  <h3 class="font-bold text-xl mb-2">Admin Dashboard</h3>
+  <div id="allBookings"></div>
+</div>
+
+<button onclick="logout()" class="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded">Logout</button>
 
 </div>
 
@@ -80,148 +95,71 @@ const firebaseConfig = {
   authDomain: "hotel-booking-3b5ce.firebaseapp.com",
   projectId: "hotel-booking-3b5ce"
 };
-
 firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 
 const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com";
 
-/* LOADING */
-function showLoading() {
-  document.getElementById("loading").style.display = "flex";
-}
-function hideLoading() {
-  document.getElementById("loading").style.display = "none";
-}
-
 /* AUTH */
-auth.onAuthStateChanged(user => {
-  if (user) {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("appPage").style.display = "block";
+auth.onAuthStateChanged(user=>{
+  if(user){
+    loginPage.style.display="none";
+    appPage.classList.remove("hidden");
 
-    const email = user.email.toLowerCase();
-
-    if (email === OWNER_EMAIL.toLowerCase()) {
-      document.getElementById("bookingSection").style.display = "none";
-      document.getElementById("userBookingsSection").style.display = "none";
-      document.getElementById("adminPanel").classList.remove("hidden");
-      loadAllBookings();
-    } else {
-      document.getElementById("bookingSection").style.display = "block";
-      document.getElementById("userBookingsSection").style.display = "block";
-      document.getElementById("adminPanel").classList.add("hidden");
-      loadMyBookings();
+    if(user.email.toLowerCase()===OWNER_EMAIL.toLowerCase()){
+      bookingSection.style.display="none";
+      adminPanel.classList.remove("hidden");
+      loadBookings();
     }
-  } else {
-    document.getElementById("loginPage").style.display = "flex";
-    document.getElementById("appPage").style.display = "none";
   }
 });
 
 /* LOGIN */
-function login() {
-  showLoading();
-
-  const emailVal = document.getElementById("email").value.trim();
-  const passwordVal = document.getElementById("password").value.trim();
-
-  auth.signInWithEmailAndPassword(emailVal, passwordVal)
-    .catch(err => alert(err.message))
-    .finally(hideLoading);
+function login(){
+  auth.signInWithEmailAndPassword(email.value,password.value)
+  .catch(e=>alert(e.message));
 }
-
-/* SIGNUP */
-function signup() {
-  showLoading();
-
-  const emailVal = document.getElementById("email").value.trim();
-  const passwordVal = document.getElementById("password").value.trim();
-
-  auth.createUserWithEmailAndPassword(emailVal, passwordVal)
-    .catch(err => alert(err.message))
-    .finally(hideLoading);
-}
-
-/* LOGOUT */
-function logout() {
-  auth.signOut();
+function signup(){
+  auth.createUserWithEmailAndPassword(email.value,password.value)
+  .catch(e=>alert(e.message));
 }
 
 /* BOOK */
-function bookRoom() {
-  showLoading();
-
-  const user = auth.currentUser;
-  const nameVal = document.getElementById("name").value.trim();
-  const roomVal = document.getElementById("room").value;
-  const checkInVal = document.getElementById("checkIn").value;
-  const checkOutVal = document.getElementById("checkOut").value;
-
-  if (!nameVal || !roomVal || !checkInVal || !checkOutVal) {
-    alert("Fill all fields");
-    hideLoading();
-    return;
-  }
-
-  if (checkOutVal <= checkInVal) {
-    alert("Check-out must be after check-in");
-    hideLoading();
-    return;
-  }
-
+function bookRoom(){
   db.collection("bookings").add({
-    userId: user.uid,
-    name: nameVal,
-    roomType: roomVal,
-    checkIn: checkInVal,
-    checkOut: checkOutVal,
-    status: "pending"
-  }).finally(hideLoading);
-}
-
-/* USER BOOKINGS */
-function loadMyBookings() {
-  db.collection("bookings")
-    .where("userId", "==", auth.currentUser.uid)
-    .onSnapshot(snapshot => {
-      let html = "";
-      snapshot.forEach(doc => {
-        const d = doc.data();
-        html += `<div class="bg-white p-2 mb-2 rounded shadow">
-          ${d.roomType} | ${d.status}
-        </div>`;
-      });
-      document.getElementById("myBookings").innerHTML = html;
-    });
+    name:name.value,
+    phone:phone.value,
+    room:room.value,
+    checkIn:checkIn.value,
+    checkOut:checkOut.value,
+    status:"pending",
+    createdAt:new Date()
+  });
+  alert("Booking sent!");
 }
 
 /* ADMIN */
-function loadAllBookings() {
-  db.collection("bookings")
-    .onSnapshot(snapshot => {
-      let html = "";
-      snapshot.forEach(doc => {
-        const d = doc.data();
-        html += `<div class="bg-white p-2 mb-2 rounded shadow">
-          ${d.name} - ${d.roomType} - ${d.status}
-          <button onclick="accept('${doc.id}')">✅</button>
-          <button onclick="reject('${doc.id}')">❌</button>
-        </div>`;
-      });
-      document.getElementById("allBookings").innerHTML = html;
+function loadBookings(){
+  db.collection("bookings").onSnapshot(s=>{
+    let h="";
+    s.forEach(d=>{
+      let data=d.data();
+      h+=`<div class="bg-white p-2 mb-2 shadow rounded">
+        ${data.name} (${data.phone}) - ${data.room} - ${data.status}
+        <button onclick="accept('${d.id}')">✔</button>
+        <button onclick="reject('${d.id}')">✖</button>
+      </div>`;
     });
+    allBookings.innerHTML=h;
+  });
 }
 
-function accept(id) {
-  db.collection("bookings").doc(id).update({ status: "accepted" });
-}
+function accept(id){db.collection("bookings").doc(id).update({status:"accepted"})}
+function reject(id){db.collection("bookings").doc(id).update({status:"rejected"})}
 
-function reject(id) {
-  db.collection("bookings").doc(id).update({ status: "rejected" });
-}
+function logout(){auth.signOut()}
 </script>
-
 </body>
 </html>
