@@ -28,11 +28,13 @@
 <!-- APP -->
 <div id="appPage" class="hidden">
 
+<!-- HEADER -->
 <div class="flex justify-between p-4">
   <h2 class="font-bold">Home</h2>
   <button onclick="logout()" class="text-red-500">Logout</button>
 </div>
 
+<!-- USER UI -->
 <div id="userUI" class="px-4">
 
 <!-- HOTEL -->
@@ -87,7 +89,7 @@
     Confirm Booking
   </button>
 
-  <div id="bookingStatus" class="text-center mt-2"></div>
+  <div id="bookingStatus" class="text-center mt-2 font-semibold"></div>
 </div>
 
 <!-- BOOKINGS -->
@@ -128,7 +130,7 @@ auth.onAuthStateChanged(user=>{
     loginPage.style.display="none";
     appPage.classList.remove("hidden");
 
-    if(user.email===OWNER_EMAIL){
+    if(user.email === OWNER_EMAIL){
       userUI.style.display="none";
       adminPanel.classList.remove("hidden");
       loadAllBookings();
@@ -145,61 +147,102 @@ auth.onAuthStateChanged(user=>{
 
 /* LOGIN */
 function login(){
-  auth.signInWithEmailAndPassword(email.value,password.value)
-  .catch(e=>alert(e.message));
+  auth.signInWithEmailAndPassword(
+    document.getElementById("email").value.trim(),
+    document.getElementById("password").value.trim()
+  ).catch(e=>alert(e.message));
 }
+
 function signup(){
-  auth.createUserWithEmailAndPassword(email.value,password.value)
-  .catch(e=>alert(e.message));
+  auth.createUserWithEmailAndPassword(
+    document.getElementById("email").value.trim(),
+    document.getElementById("password").value.trim()
+  ).catch(e=>alert(e.message));
 }
-function logout(){ auth.signOut(); }
+
+function logout(){
+  auth.signOut();
+}
 
 /* SELECT ROOM */
 function selectRoom(room){
   selectedRoom = room;
-  selectedRoomText.innerText = "Selected: " + room;
+
+  document.getElementById("selectedRoomText").innerText = "Selected: " + room;
 
   document.getElementById("roomStandard").classList.remove("border-2","border-blue-600");
   document.getElementById("roomDeluxe").classList.remove("border-2","border-blue-600");
 
-  document.getElementById("room"+room).classList.add("border-2","border-blue-600");
+  if(room === "Standard"){
+    document.getElementById("roomStandard").classList.add("border-2","border-blue-600");
+  } else {
+    document.getElementById("roomDeluxe").classList.add("border-2","border-blue-600");
+  }
 }
 
-/* CONFIRM */
+/* CONFIRM BOOKING */
 function confirmBooking(){
-  if(!selectedRoom || !name.value || !phone.value || !checkIn.value || !checkOut.value){
-    alert("Fill all fields & select room");
+
+  const userName = document.getElementById("name").value.trim();
+  const userPhone = document.getElementById("phone").value.trim();
+  const checkInDate = document.getElementById("checkIn").value;
+  const checkOutDate = document.getElementById("checkOut").value;
+
+  if(selectedRoom === "" || userName === "" || userPhone === "" || checkInDate === "" || checkOutDate === ""){
+    alert("Please fill all details and select a room");
     return;
   }
 
   db.collection("bookings").add({
     userId: auth.currentUser.uid,
     room: selectedRoom,
-    name: name.value,
-    phone: phone.value,
-    checkIn: checkIn.value,
-    checkOut: checkOut.value,
+    name: userName,
+    phone: userPhone,
+    checkIn: checkInDate,
+    checkOut: checkOutDate,
     status:"pending"
   }).then(()=>{
 
-    bookingStatus.innerText="✅ Booking Sent";
+    document.getElementById("bookingStatus").innerText = "✅ Booking Sent";
 
-    const msg = `New Booking\n${name.value}\n${selectedRoom}\n${checkIn.value} - ${checkOut.value}`;
+    const msg = `🏨 New Booking
+Name: ${userName}
+Room: ${selectedRoom}
+Check-in: ${checkInDate}
+Check-out: ${checkOutDate}
+Phone: ${userPhone}`;
+
     window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msg)}`);
 
+    // reset form
+    selectedRoom = "";
+    document.getElementById("selectedRoomText").innerText = "No room selected";
+    document.getElementById("name").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("checkIn").value = "";
+    document.getElementById("checkOut").value = "";
+
+    document.getElementById("roomStandard").classList.remove("border-2","border-blue-600");
+    document.getElementById("roomDeluxe").classList.remove("border-2","border-blue-600");
   });
 }
 
 /* USER BOOKINGS */
 function loadMyBookings(){
-  db.collection("bookings").where("userId","==",auth.currentUser.uid)
+  db.collection("bookings")
+  .where("userId","==",auth.currentUser.uid)
   .onSnapshot(s=>{
     let h="";
     s.forEach(d=>{
       let data=d.data();
-      h+=`<div class="bg-white p-2 mb-2 rounded shadow">${data.room} - ${data.status}</div>`;
+      let color = data.status==="accepted"?"green":data.status==="rejected"?"red":"orange";
+
+      h+=`<div class="bg-white p-2 mb-2 rounded shadow">
+        ${data.room}
+        <span style="color:${color}; font-weight:bold">${data.status}</span>
+      </div>`;
     });
-    myBookings.innerHTML=h;
+    document.getElementById("myBookings").innerHTML=h;
   });
 }
 
@@ -215,12 +258,13 @@ function loadAllBookings(){
         <button onclick="reject('${d.id}')">✖</button>
       </div>`;
     });
-    allBookings.innerHTML=h;
+    document.getElementById("allBookings").innerHTML=h;
   });
 }
 
-function accept(id){db.collection("bookings").doc(id).update({status:"accepted"});}
-function reject(id){db.collection("bookings").doc(id).update({status:"rejected"});}
+function accept(id){ db.collection("bookings").doc(id).update({status:"accepted"}); }
+function reject(id){ db.collection("bookings").doc(id).update({status:"rejected"}); }
+
 </script>
 
 </body>
