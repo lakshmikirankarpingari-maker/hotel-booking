@@ -12,108 +12,137 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <style>
-    .fade-in { animation: fade 0.5s ease-in; }
-    @keyframes fade {
-      from { opacity:0; transform: translateY(10px);}
-      to { opacity:1; transform: translateY(0);}
-    }
+    body { font-family: 'Segoe UI', sans-serif; }
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-100 to-purple-200">
-
-<!-- LOADING -->
-<div id="loading" class="fixed inset-0 bg-white flex items-center justify-center hidden z-50">
-  <div class="animate-spin h-16 w-16 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-</div>
+<body class="bg-gray-100">
 
 <!-- LOGIN -->
 <div id="loginPage" class="min-h-screen flex items-center justify-center">
-  <div class="bg-white p-6 rounded-xl shadow w-80 fade-in">
-    <h2 class="text-xl font-bold mb-4 text-center">Login / Signup</h2>
-
+  <div class="bg-white p-6 rounded-2xl shadow w-80">
+    <h2 class="text-xl font-bold mb-4 text-center">Login</h2>
     <input id="email" placeholder="Email" class="w-full mb-3 p-2 border rounded">
     <input id="password" type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded">
-
-    <button onclick="login()" class="w-full bg-blue-500 text-white p-2 rounded mb-2 hover:scale-105 transition">Login</button>
-    <button onclick="signup()" class="w-full bg-green-500 text-white p-2 rounded hover:scale-105 transition">Signup</button>
+    <button onclick="login()" class="w-full bg-blue-600 text-white p-2 rounded-xl">Login</button>
+    <button onclick="signup()" class="w-full mt-2 bg-gray-200 p-2 rounded-xl">Signup</button>
   </div>
 </div>
 
 <!-- APP -->
-<div id="appPage" style="display:none;">
+<div id="appPage" class="hidden">
 
-  <!-- USER UI -->
-  <div id="userUI">
+<!-- HEADER -->
+<div class="flex justify-between items-center p-4">
+  <h2 class="text-lg font-semibold">Home</h2>
+  <button onclick="logout()" class="text-red-500 font-semibold">Logout</button>
+</div>
 
-    <!-- HEADER -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 text-center fade-in">
-      <h1 class="text-3xl font-bold">🏨 Sai Lakshmi Residency</h1>
-      <p>Clean • Hygienic • Family Friendly</p>
+<!-- USER UI -->
+<div id="userUI" class="px-4">
+
+<!-- HOTEL CARD -->
+<div class="bg-white rounded-3xl shadow overflow-hidden">
+
+  <div class="relative">
+    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945"
+         class="w-full h-56 object-cover">
+
+    <div class="absolute bottom-4 left-4 text-white">
+      <h1 class="text-2xl font-bold">Stay easy.<br>Rest well.</h1>
+      <p class="text-sm">Clean rooms • Near bus stand</p>
     </div>
-
-    <!-- ROOMS -->
-    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 fade-in">
-
-      <div class="bg-white rounded-xl shadow overflow-hidden">
-        <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9R5fqddFZ39svHGo1EondlVwCR-WzgRxu46HRzw9UemkL2Cktk4oXfhV43pG1z2P253SRs3CqiGXFADFEElTAjsSzjjT3nPy6ixl-K_I9Sazw2oelQiVjOfx85OzjvYOV7RF3yfLk3zoxjx=w224-h298-k-no"
-             class="w-full h-48 object-contain bg-gray-100 rounded-xl hover:scale-105 transition duration-300">
-        <div class="p-3"><b>Standard Room</b></div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow overflow-hidden">
-        <img src="https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TKJ48pRFGTIpgv54C4tzTMNDA5fkQfL3ygOPXrs-1MipNj7NbjSj7sBJmkEMy2-VJKWBpkknxX9Riw2LIhp09AEH7ItTa_25nW4r64GBXDWkQrMEVu4iMSDK78Iso5WjyKilLJkQ=w529-h298-k-no"
-             class="w-full h-48 object-contain bg-gray-100 rounded-xl hover:scale-105 transition duration-300">
-        <div class="p-3"><b>Deluxe Room</b></div>
-      </div>
-
-    </div>
-
-    <!-- BOOK -->
-    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow fade-in">
-      <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
-      <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
-
-      <select id="room" class="w-full mb-2 p-2 border rounded">
-        <option value="">Select Room</option>
-        <option>Standard</option>
-        <option>Deluxe</option>
-      </select>
-
-      <input type="date" id="checkIn" class="w-full mb-2 p-2 border rounded">
-      <input type="date" id="checkOut" class="w-full mb-2 p-2 border rounded">
-
-      <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-2 rounded hover:scale-105 transition">
-        Book Now
-      </button>
-
-      <div id="bookingStatus" class="text-center mt-3 font-semibold"></div>
-    </div>
-
-    <!-- MY BOOKINGS -->
-    <div class="max-w-md mx-auto mt-6 fade-in">
-      <h3 class="font-bold mb-2">My Bookings</h3>
-      <div id="myBookings"></div>
-    </div>
-
   </div>
 
-  <!-- ADMIN -->
-  <div id="adminPanel" class="hidden p-4">
-    <h2 class="text-xl font-bold mb-3">Admin Dashboard</h2>
-    <div id="allBookings"></div>
+  <div class="p-4 flex justify-between items-center">
+    <div>
+      <h3 class="font-bold">Sai Lakshmi Residency</h3>
+      <p class="text-sm text-gray-500">Muthukur, AP</p>
+    </div>
+    <a href="tel:7337233878" class="bg-blue-100 p-3 rounded-full text-xl">📞</a>
   </div>
 
-  <button onclick="logout()" class="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded hover:scale-105 transition">
-    Logout
+</div>
+
+<!-- BOOKING -->
+<div class="bg-white mt-4 p-4 rounded-2xl shadow">
+
+  <h3 class="font-bold mb-2">Plan your stay</h3>
+
+  <input type="date" id="checkIn" class="w-full mb-2 p-2 border rounded">
+  <input type="date" id="checkOut" class="w-full mb-2 p-2 border rounded">
+
+  <select id="room" class="w-full mb-2 p-2 border rounded">
+    <option value="">Select Room</option>
+    <option>Standard</option>
+    <option>Deluxe</option>
+  </select>
+
+  <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
+  <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
+
+  <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-3 rounded-xl">
+    Check room options →
   </button>
+
+  <div id="bookingStatus" class="text-center mt-2 font-semibold"></div>
+
+</div>
+
+<!-- ROOMS -->
+<div class="mt-4">
+  <h3 class="font-bold mb-2 px-2">Popular rooms</h3>
+
+  <div class="flex gap-3 overflow-x-auto px-2">
+
+    <div class="min-w-[220px] bg-white rounded-xl shadow">
+      <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32"
+           class="w-full h-32 object-cover rounded-t-xl">
+      <div class="p-2">
+        <p class="font-bold">Deluxe Family</p>
+        <p class="text-sm text-gray-500">₹1200 / night</p>
+      </div>
+    </div>
+
+    <div class="min-w-[220px] bg-white rounded-xl shadow">
+      <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427"
+           class="w-full h-32 object-cover rounded-t-xl">
+      <div class="p-2">
+        <p class="font-bold">Twin Comfort</p>
+        <p class="text-sm text-gray-500">₹800 / night</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="bg-white mt-4 p-4 rounded-2xl shadow">
+  <p>✔ 24x7 Hot Water</p>
+  <p>✔ Daily Cleaning</p>
+  <p>✔ Family Friendly</p>
+</div>
+
+<!-- MY BOOKINGS -->
+<div class="mt-4 px-2">
+  <h3 class="font-bold mb-2">My Bookings</h3>
+  <div id="myBookings"></div>
+</div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden p-4">
+  <h2 class="font-bold mb-2">Admin Dashboard</h2>
+  <div id="allBookings"></div>
+</div>
 
 </div>
 
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
-  authDomain: "hotel-booking-3b5ce.firebaseapp.com",
+  authDomain: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
   projectId: "hotel-booking-3b5ce"
 };
 
@@ -122,14 +151,15 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com";
+const OWNER_WHATSAPP = "7337233878";
 
 /* AUTH */
 auth.onAuthStateChanged(user=>{
   if(user){
     loginPage.style.display="none";
-    appPage.style.display="block";
+    appPage.classList.remove("hidden");
 
-    if(user.email.toLowerCase()===OWNER_EMAIL.toLowerCase()){
+    if(user.email === OWNER_EMAIL){
       userUI.style.display="none";
       adminPanel.classList.remove("hidden");
       loadAllBookings();
@@ -140,7 +170,7 @@ auth.onAuthStateChanged(user=>{
     }
   } else {
     loginPage.style.display="flex";
-    appPage.style.display="none";
+    appPage.classList.add("hidden");
   }
 });
 
@@ -149,6 +179,7 @@ function login(){
   auth.signInWithEmailAndPassword(email.value,password.value)
   .catch(e=>alert(e.message));
 }
+
 function signup(){
   auth.createUserWithEmailAndPassword(email.value,password.value)
   .catch(e=>alert(e.message));
@@ -157,27 +188,44 @@ function signup(){
 /* LOGOUT */
 function logout(){
   auth.signOut().then(()=>{
-    document.getElementById("appPage").style.display="none";
+    document.getElementById("appPage").classList.add("hidden");
     document.getElementById("loginPage").style.display="flex";
   });
 }
 
-/* BOOK */
+/* BOOK ROOM + WHATSAPP */
 function bookRoom(){
   if(!name.value || !phone.value || !room.value || !checkIn.value || !checkOut.value){
-    alert("Fill all fields"); return;
+    alert("Fill all fields");
+    return;
   }
 
-  db.collection("bookings").add({
+  const data = {
     userId: auth.currentUser.uid,
+    room: room.value,
     name: name.value,
     phone: phone.value,
-    room: room.value,
     checkIn: checkIn.value,
     checkOut: checkOut.value,
     status:"pending"
-  }).then(()=>{
-    bookingStatus.innerText="✅ Booking sent (Pending)";
+  };
+
+  db.collection("bookings").add(data).then(()=>{
+
+    bookingStatus.innerText="✅ Booking sent!";
+
+    // WHATSAPP MESSAGE
+    const message = `🏨 New Booking
+
+Name: ${name.value}
+Phone: ${phone.value}
+Room: ${room.value}
+Check-in: ${checkIn.value}
+Check-out: ${checkOut.value}`;
+
+    const url = `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+
     name.value=phone.value=room.value=checkIn.value=checkOut.value="";
   });
 }
@@ -193,10 +241,8 @@ function loadMyBookings(){
       let color = data.status==="accepted"?"green":data.status==="rejected"?"red":"orange";
 
       h+=`<div class="bg-white p-2 mb-2 rounded shadow">
-        ${data.room} (${data.checkIn})
-        <span style="color:${color}; font-weight:bold">
-          ${data.status}
-        </span>
+        ${data.room} 
+        <span style="color:${color}; font-weight:bold">${data.status}</span>
       </div>`;
     });
     myBookings.innerHTML=h;
