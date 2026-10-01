@@ -10,10 +10,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-  <style>
-    body { font-family: 'Segoe UI', sans-serif; }
-  </style>
 </head>
 
 <body class="bg-gray-100">
@@ -43,11 +39,9 @@
 
 <!-- HOTEL CARD -->
 <div class="bg-white rounded-3xl shadow overflow-hidden">
-
   <div class="relative">
     <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945"
          class="w-full h-56 object-cover">
-
     <div class="absolute bottom-4 left-4 text-white">
       <h1 class="text-2xl font-bold">Stay easy.<br>Rest well.</h1>
       <p class="text-sm">Clean rooms • Near bus stand</p>
@@ -61,7 +55,6 @@
     </div>
     <a href="tel:7337233878" class="bg-blue-100 p-3 rounded-full text-xl">📞</a>
   </div>
-
 </div>
 
 <!-- BOOKING -->
@@ -81,16 +74,15 @@
   <input id="name" placeholder="Name" class="w-full mb-2 p-2 border rounded">
   <input id="phone" placeholder="Phone" class="w-full mb-2 p-2 border rounded">
 
-  <button onclick="bookRoom()" class="w-full bg-blue-600 text-white p-3 rounded-xl">
+  <button onclick="handleBooking()" class="w-full bg-blue-600 text-white p-3 rounded-xl">
     Check room options →
   </button>
 
   <div id="bookingStatus" class="text-center mt-2 font-semibold"></div>
-
 </div>
 
 <!-- ROOMS -->
-<div class="mt-4">
+<div id="roomsSection" class="mt-4">
   <h3 class="font-bold mb-2 px-2">Popular rooms</h3>
 
   <div class="flex gap-3 overflow-x-auto px-2">
@@ -116,13 +108,6 @@
   </div>
 </div>
 
-<!-- FEATURES -->
-<div class="bg-white mt-4 p-4 rounded-2xl shadow">
-  <p>✔ 24x7 Hot Water</p>
-  <p>✔ Daily Cleaning</p>
-  <p>✔ Family Friendly</p>
-</div>
-
 <!-- MY BOOKINGS -->
 <div class="mt-4 px-2">
   <h3 class="font-bold mb-2">My Bookings</h3>
@@ -142,7 +127,7 @@
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
-  authDomain: "AIzaSyDs14OWNMCeO9h7u2MD6tz7TBG2IHKfZU0",
+  authDomain: "hotel-booking-3b5ce.firebaseapp.com",
   projectId: "hotel-booking-3b5ce"
 };
 
@@ -151,9 +136,8 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 const OWNER_EMAIL = "lakshmikirankarpingari@gmail.com";
-const OWNER_WHATSAPP = "7337233878";
+const OWNER_WHATSAPP = "917337233878"; // updated number
 
-/* AUTH */
 auth.onAuthStateChanged(user=>{
   if(user){
     loginPage.style.display="none";
@@ -188,18 +172,23 @@ function signup(){
 /* LOGOUT */
 function logout(){
   auth.signOut().then(()=>{
-    document.getElementById("appPage").classList.add("hidden");
-    document.getElementById("loginPage").style.display="flex";
+    appPage.classList.add("hidden");
+    loginPage.style.display="flex";
   });
 }
 
-/* BOOK ROOM + WHATSAPP */
-function bookRoom(){
+/* BUTTON LOGIC */
+function handleBooking(){
   if(!name.value || !phone.value || !room.value || !checkIn.value || !checkOut.value){
-    alert("Fill all fields");
+    document.getElementById("roomsSection").scrollIntoView({behavior:"smooth"});
+    bookingStatus.innerText="👇 Select room & fill details to book";
     return;
   }
+  bookRoom();
+}
 
+/* BOOK + WHATSAPP */
+function bookRoom(){
   const data = {
     userId: auth.currentUser.uid,
     room: room.value,
@@ -211,10 +200,8 @@ function bookRoom(){
   };
 
   db.collection("bookings").add(data).then(()=>{
-
     bookingStatus.innerText="✅ Booking sent!";
 
-    // WHATSAPP MESSAGE
     const message = `🏨 New Booking
 
 Name: ${name.value}
@@ -241,7 +228,7 @@ function loadMyBookings(){
       let color = data.status==="accepted"?"green":data.status==="rejected"?"red":"orange";
 
       h+=`<div class="bg-white p-2 mb-2 rounded shadow">
-        ${data.room} 
+        ${data.room}
         <span style="color:${color}; font-weight:bold">${data.status}</span>
       </div>`;
     });
